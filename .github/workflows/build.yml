@@ -1,0 +1,39 @@
+name: Build ESP32-C3 Firmware
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+
+      - name: Install ESP32 Core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Install Libraries
+        run: |
+          arduino-cli lib install "WiFi"
+          arduino-cli lib install "Wire"
+          arduino-cli lib install "SPI"
+
+      - name: Compile Sketch
+        run: |
+          arduino-cli compile \
+            --fqbn esp32:esp32:esp32c3 \
+            .
+
+      - name: Upload BIN
+        uses: actions/upload-artifact@v4
+        with:
+          name: esp32-c3-firmware
+          path: "**/*.bin"
