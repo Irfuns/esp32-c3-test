@@ -23,7 +23,6 @@ jobs:
       - name: Install Libraries
         run: |
           arduino-cli lib install "WiFi"
-          arduino-cli lib install "Wire"
           arduino-cli lib install "SPI"
 
       - name: Compile Sketch
